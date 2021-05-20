@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Builder;
 use App\Models\Event;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -176,6 +177,9 @@ class EventsController extends BaseController
      */
 
     public function getFutureEventsWithWorkshops() {
-        throw new \Exception('implement in coding task 2');
+        $futureEvents = Event::with('workshops')->whereHas('workshops', function(Builder $query){
+            $query->where('start', '>', Date('Y-m-d H:i:s'));
+        })->get();
+        return $futureEvents;
     }
 }
